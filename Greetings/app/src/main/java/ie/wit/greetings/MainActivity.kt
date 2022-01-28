@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //test pull request
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
