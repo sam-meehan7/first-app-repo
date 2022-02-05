@@ -3,17 +3,18 @@ package ie.wit.placemarker.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
-import ie.wit.placemarker.databinding.ActivityMainBinding
+import ie.wit.placemarker.databinding.ActivityPlacemarkBinding
+import ie.wit.placemarker.main.MainApp
 import ie.wit.placemarker.models.PlacemarkModel
 import timber.log.Timber
 import timber.log.Timber.i
 
 
-class MainActivity : AppCompatActivity() {
+class PlacemarkActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityPlacemarkBinding
     var placemark = PlacemarkModel()
-    val placemarks = ArrayList<String>()
+    lateinit var app : MainApp
 
     fun printAll(strings: MutableList<String>) {
         for(s in strings) print("$s ")
@@ -21,32 +22,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityPlacemarkBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Timber.plant(Timber.DebugTree())
+        app = application as MainApp
 
 
         i("ACTIVITY STARTED")
 
 
         binding.btnAdd.setOnClickListener() {
-            i("add button pressed")
 
             placemark.title = binding.placemarkTitle.text.toString()
             placemark.description = binding.placemarkDescription.text.toString()
 
-            if(placemark.title.isNotEmpty() && placemark.description.isNotEmpty() ){
-                i("${placemark.title} was added to the list of placemarks" )
-                i("${placemark.description} is the desc" )
+            if(placemark.title.isNotEmpty()){
+                app.placemarks.add(placemark.copy());
 
-                Snackbar.make(it, "${placemark.title} was added to the list of placemarks", Snackbar.LENGTH_LONG).show()
-                placemarks.add(placemark.title);
+                i("add button pressed: ${placemark}")
+
+                for (i in app.placemarks.indices){
+                    i("PLacemark[$i]:${this.app.placemarks[i]}")
+                }
+
             }
 
             else{
                 Snackbar.make(it, "Please enter a title", Snackbar.LENGTH_LONG).show()
-                Snackbar.make(it, "Please enter a description", Snackbar.LENGTH_LONG).show()
+//                Snackbar.make(it, "Please enter a description", Snackbar.LENGTH_LONG).show()
             }
 
 //
@@ -60,11 +65,6 @@ class MainActivity : AppCompatActivity() {
 //                Snackbar.make(it, "Please enter a description", Snackbar.LENGTH_LONG).show()
 //            }
 //        }
-
-        binding.btnPrint.setOnClickListener(){
-            printAll(placemarks)
-        }
-
     }
 }
     }
